@@ -115,11 +115,58 @@ class AdminController extends Controller
     return view('admin.products');
   }
 
+  public function editProduct($productid)
+  {
+    $product = Products::findorFail($productid);
+    return view('admin.editProduct', compact('product'));
+  }
+
   public function deleteProduct($id)
   {
     $data = Products::find($id);
     $data->delete();
     return redirect()->back()->with('success', 'Product deleted successfully');
+
+  }
+
+  public function updateProduct(Request $request, $id)
+  {
+    $request->validate([
+      'productName' => 'required|max:225',
+      'productCategory' => 'required|max:225',
+      'productImage' => ['nullable','file', 'max:10000'],
+      'productDescription' => 'required',
+      'manufacturerName' => 'required',
+      'status' => 'required',
+      'productPrice' => 'nullable',
+      'discountPrice' => 'nullable',
+      'warranty' => 'nullable|max:225',
+    ]);
+
+    $product = Products::find($id);
+    $product->productName = $request->productName;
+    $product->productCategory = $request->productCategory;
+    $product->productDescription = $request->productDescription;
+    $product->manufacturerName = $request->manufacturerName;
+    $product->status = $request->status;
+    $product->productPrice = $request->productPrice;
+    $product->discountPrice = $request->discountPrice;
+    $product->quantity = $request->quantity;
+    $product->warranty = $request->warranty;
+    $product->featuredProduct = $request->featuredProduct;
+
+    //to add image file to database
+    if($request->hasFile('productImage')){
+      $image = $request->file('productImage');
+      $productImage = time() . '.' . $image->getClientOriginalExtension();
+      $image->move(public_path('productFolder'), $productImage);
+      $product->productImage = $productImage;
+    }
+
+    $product->save();
+
+    return redirect()->route('products')->with('message', 'Product updated successfully');
+
 
   }
 }

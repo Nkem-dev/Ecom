@@ -80,4 +80,10 @@ Route::middleware(['auth', 'isAdmin'])->group(function(){
     //route for delete products
     Route::get('/deleteProduct/{id}', [AdminController::class, 'deleteProduct'])->name('deleteProduct');
 
+    //route for edit product 
+    Route::get('/editProduct{id}', [AdminController::class, 'editProduct'])->name('editProduct');
+
+    //route for update product
+    Route::post('/updateProduct/{id}', [AdminController::class, 'updateProduct'])->name('updateProduct');
+
 });
