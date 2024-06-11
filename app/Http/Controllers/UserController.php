@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Products;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -47,5 +48,19 @@ class UserController extends Controller
    {
       Auth::guard('web')->logout();
       return redirect('/')->with('message', 'You have successfully logged out');
+   }
+
+   public function product_details($id)
+   {
+      $data = Products::findorFail($id);
+      $getId = $data->id;
+      //dd($getId);
+
+      $getCat = $data->productCategory;
+
+      $similar = Products::where('productCategory', $getCat)->where('id', '!=', $data->id)->latest()->paginate(4);
+
+      return view('product_details', compact('data', 'similar'));
+
    }
 }

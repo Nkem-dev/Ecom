@@ -38,6 +38,9 @@ Route::post('store', [UserController::class, 'store'])->name('store_user');
 //route for logout
 Route::post('logout', [UserController::class, 'logout'])->name('logout');
 
+//route for product details
+Route::get('product_details/{id}', [UserController::class, 'product_details'])->name('product_details');
+
 
 
 
@@ -85,5 +88,11 @@ Route::middleware(['auth', 'isAdmin'])->group(function(){
 
     //route for update product
     Route::post('/updateProduct/{id}', [AdminController::class, 'updateProduct'])->name('updateProduct');
+
+    //user list route
+    Route::get('admin/userList', [AdminController::class, 'userList'])->name('userList');
+
+    //route for delete user
+    Route::get('/deleteUser{id}', [AdminController::class, 'deleteUser'])->name('deleteUser');
 
 });

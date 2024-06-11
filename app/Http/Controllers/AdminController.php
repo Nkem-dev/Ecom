@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Products;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -167,6 +168,20 @@ class AdminController extends Controller
 
     return redirect()->route('products')->with('message', 'Product updated successfully');
 
+
+  }
+
+  public function userList()
+  {
+    $users = User::Where('role_as', '0')->paginate(20);
+    return view('admin.user_list', compact('users'));
+  }
+
+  public function deleteUser($id)
+  {
+    $data = User::find($id);
+    $data->delete();
+    return redirect()->back()->with('success', 'User deleted successfully');
 
   }
 }
